@@ -38,13 +38,14 @@ function calculate() {
     let actualVolume = 0;
     let startX = 0;
     let endX = INTERSECTION_2;
+    
     if (section === 'tail') {
         endX = INTERSECTION_1;
         actualVolume = ACTUAL_TAIL_VOLUME;
     } else if (section === 'body') {
         startX = INTERSECTION_1;
         actualVolume = ACTUAL_BODY_VOLUME;
-    } else { // both
+    } else { 
         actualVolume = ACTUAL_TOTAL_VOLUME;
     }
     
@@ -75,10 +76,8 @@ function calculateRiemannSum(a, b, n, method) {
         
         let diff;
         if (x <= INTERSECTION_1) {
-            // In tail section: f(x) > g(x)
             diff = f(x) - g(x);
         } else {
-            // In body section: g(x) > f(x)
             diff = g(x) - f(x);
         }
         
@@ -169,6 +168,7 @@ function plotRiemannSum(section, n, method) {
         name: 'g(x)',
         line: { color: '#764ba2', width: 2 }
     });
+    
     let startX = 0;
     let endX = INTERSECTION_2;
     
@@ -209,6 +209,7 @@ function addRiemannRectangles(traces, a, b, n, method) {
         
         const f_val = f(x_sample);
         const g_val = g(x_sample);
+        
         const isInTail = x_sample <= INTERSECTION_1;
         const fillColor = isInTail ? 'rgba(102, 126, 234, 0.3)' : 'rgba(118, 75, 162, 0.3)';
         const lineColor = isInTail ? '#667eea' : '#764ba2';
