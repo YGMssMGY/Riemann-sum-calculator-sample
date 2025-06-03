@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Volume Riemann Sum Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fish Volume Model - Riemann Sum Calculator</h1>
+            <p class="subtitle">Calculate the volume of a fish using Riemann sums</p>
+        </header>
+
+        <div class="info-section">
+            <h2>Mathematical Model</h2>
+            <div class="equations">
+                <p><strong>Base Functions:</strong></p>
+                <p>f(x) = (¼x - 2)²</p>
+                <p>g(x) = -(¼x - 2)² + 4</p>
+                <p><strong>Intersection Points:</strong> (2.34315, 2) and (13.65685, 2)</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="section-select">Select Section:</label>
+                <select id="section-select">
+                    <option value="tail">Tail (0 to 2.34315)</option>
+                    <option value="body">Body (2.34315 to 13.65685)</option>
+                    <option value="both">Both Sections</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="rectangles">Number of Rectangles:</label>
+                <input type="range" id="rectangles" min="1" max="100" value="10">
+                <span id="rect-value">10</span>
+            </div>
+
+            <div class="control-group">
+                <label for="method">Riemann Sum Method:</label>
+                <select id="method">
+                    <option value="left">Left Riemann Sum</option>
+                    <option value="right">Right Riemann Sum</option>
+                    <option value="midpoint">Midpoint Riemann Sum</option>
+                </select>
+            </div>
+
+            <button id="calculate-btn" class="calculate-btn">Calculate Riemann Sum</button>
+        </div>
+
+        <div class="results">
+            <h2>Results</h2>
+            <div class="result-grid">
+                <div class="result-item">
+                    <h3>Riemann Sum Approximation</h3>
+                    <p id="riemann-result">-</p>
+                </div>
+                <div class="result-item">
+                    <h3>Actual Volume (Integration)</h3>
+                    <p id="actual-result">-</p>
+                </div>
+                <div class="result-item">
+                    <h3>Error</h3>
+                    <p id="error-result">-</p>
+                </div>
+                <div class="result-item">
+                    <h3>Error Percentage</h3>
+                    <p id="error-percent">-</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="visualization">
+            <h2>Visualization</h2>
+            <div id="function-plot"></div>
+            <div id="riemann-plot"></div>
+        </div>
+
+        <div class="explanation">
+            <h2>How It Works</h2>
+            <p>This calculator approximates the volume of the fish model using Riemann sums. The volume is calculated by:</p>
+            <ol>
+                <li>Taking cross-sections perpendicular to the x-axis</li>
+                <li>Using the difference between f(x) and g(x) as the diameter of semicircles</li>
+                <li>Calculating the area of each semicircle: A = π/8 × (difference)²</li>
+                <li>Summing up all the areas multiplied by the width of each rectangle (Δx)</li>
+            </ol>
+            <p>The formula for volume: V = π/8 × ∫(upper function - lower function)² dx</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
