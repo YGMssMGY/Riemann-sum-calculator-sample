@@ -36,18 +36,19 @@ function calculate() {
     
     let riemannSum = 0;
     let actualVolume = 0;
-    
-    if (section === 'tail' || section === 'both') {
-        const tailSum = calculateRiemannSum(0, INTERSECTION_1, n, method, 'tail');
-        riemannSum += tailSum;
-        actualVolume += ACTUAL_TAIL_VOLUME;
+    let startX = 0;
+    let endX = INTERSECTION_2;
+    if (section === 'tail') {
+        endX = INTERSECTION_1;
+        actualVolume = ACTUAL_TAIL_VOLUME;
+    } else if (section === 'body') {
+        startX = INTERSECTION_1;
+        actualVolume = ACTUAL_BODY_VOLUME;
+    } else { // both
+        actualVolume = ACTUAL_TOTAL_VOLUME;
     }
     
-    if (section === 'body' || section === 'both') {
-        const bodySum = calculateRiemannSum(INTERSECTION_1, INTERSECTION_2, n, method, 'body');
-        riemannSum += bodySum;
-        actualVolume += ACTUAL_BODY_VOLUME;
-    }
+    riemannSum = calculateRiemannSum(startX, endX, n, method);
     
     riemannResult.textContent = riemannSum.toFixed(3);
     actualResult.textContent = actualVolume.toFixed(3);
@@ -58,7 +59,7 @@ function calculate() {
     plotRiemannSum(section, n, method);
 }
 
-function calculateRiemannSum(a, b, n, method, section) {
+function calculateRiemannSum(a, b, n, method) {
     const dx = (b - a) / n;
     let sum = 0;
     
@@ -71,11 +72,14 @@ function calculateRiemannSum(a, b, n, method, section) {
         } else { 
             x = a + (i + 0.5) * dx;
         }
+        
         let diff;
-        if (section === 'tail') {
+        if (x <= INTERSECTION_1) {
+            // In tail section: f(x) > g(x)
             diff = f(x) - g(x);
         } else {
-            diff = g(x) - f(x); 
+            // In body section: g(x) > f(x)
+            diff = g(x) - f(x);
         }
         
         const area = (Math.PI / 8) * Math.pow(diff, 2);
@@ -165,14 +169,15 @@ function plotRiemannSum(section, n, method) {
         name: 'g(x)',
         line: { color: '#764ba2', width: 2 }
     });
+    let startX = 0;
+    let endX = INTERSECTION_2;
     
-    if (section === 'tail' || section === 'both') {
-        addRiemannRectangles(traces, 0, INTERSECTION_1, n, method, 'tail');
+    if (section === 'tail') {
+        endX = INTERSECTION_1;
+    } else if (section === 'body') {
+        startX = INTERSECTION_1;
     }
-    
-    if (section === 'body' || section === 'both') {
-        addRiemannRectangles(traces, INTERSECTION_1, INTERSECTION_2, n, method, 'body');
-    }
+    addRiemannRectangles(traces, startX, endX, n, method);
     
     const layout = {
         title: `Riemann Sum Visualization (${method} method, n=${n})`,
@@ -186,7 +191,7 @@ function plotRiemannSum(section, n, method) {
     Plotly.newPlot('riemann-plot', traces, layout);
 }
 
-function addRiemannRectangles(traces, a, b, n, method, section) {
+function addRiemannRectangles(traces, a, b, n, method) {
     const dx = (b - a) / n;
     
     for (let i = 0; i < n; i++) {
@@ -204,27 +209,17 @@ function addRiemannRectangles(traces, a, b, n, method, section) {
         
         const f_val = f(x_sample);
         const g_val = g(x_sample);
-        
-        const shape = {
-            type: 'rect',
-            x0: x_left,
-            x1: x_right,
-            y0: Math.min(f_val, g_val),
-            y1: Math.max(f_val, g_val),
-            fillcolor: section === 'tail' ? 'rgba(102, 126, 234, 0.3)' : 'rgba(118, 75, 162, 0.3)',
-            line: {
-                color: section === 'tail' ? '#667eea' : '#764ba2',
-                width: 1
-            }
-        };
+        const isInTail = x_sample <= INTERSECTION_1;
+        const fillColor = isInTail ? 'rgba(102, 126, 234, 0.3)' : 'rgba(118, 75, 162, 0.3)';
+        const lineColor = isInTail ? '#667eea' : '#764ba2';
         
         traces.push({
             x: [x_left, x_left, x_right, x_right, x_left],
             y: [Math.min(f_val, g_val), Math.max(f_val, g_val), Math.max(f_val, g_val), Math.min(f_val, g_val), Math.min(f_val, g_val)],
             fill: 'toself',
-            fillcolor: section === 'tail' ? 'rgba(102, 126, 234, 0.3)' : 'rgba(118, 75, 162, 0.3)',
+            fillcolor: fillColor,
             line: {
-                color: section === 'tail' ? '#667eea' : '#764ba2',
+                color: lineColor,
                 width: 1
             },
             type: 'scatter',
