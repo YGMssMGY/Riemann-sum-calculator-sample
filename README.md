@@ -64,5 +64,5 @@ This calculator is designed for AP Calculus AB students to:
 
 Based on the Physical Design Project by Liu Zuheng (Harry) and Zhu Yuelin (Cindy) 
 # Reminder
-*AI is involved in this project*
-*Project is imcomplete and may result in certain error, please keep that in mind!!!*
+- *AI is involved in this project*
+- *Project is imcomplete and may result in certain error, please keep that in mind!!!*
